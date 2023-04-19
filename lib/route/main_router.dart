@@ -26,7 +26,7 @@ class MainRouter {
 
         return MaterialPageRoute<dynamic>(
           settings: settings,
-          builder: (BuildContext context) => const SpeakingPage(),
+          builder: (BuildContext context) => const WrittingPage(),
         );
 
       default:

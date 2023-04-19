@@ -1,5 +1,9 @@
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_yakadir/blocs/Cards/cards.dart';
+import 'package:test_yakadir/blocs/Cards/cards_events.dart';
+import 'package:test_yakadir/blocs/Cards/cards_states.dart';
 import 'package:test_yakadir/models/yakadire_card.dart';
 import 'package:test_yakadir/pages/home/components/custom_app_bar.dart';
 import 'package:test_yakadir/pages/home/components/custom_nav_bar.dart';
@@ -69,6 +73,13 @@ class _HomePageState extends State<HomePage> {
   ];
 
   @override
+  void initState() {
+    context.read<CardsBloc>().add(GetCardsEvent());
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -86,12 +97,16 @@ class _HomePageState extends State<HomePage> {
             child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.70,
           width: MediaQuery.of(context).size.width,
-          child: AppinioSwiper(
-              cardsCount: yakadirCards.length,
-              cardsBuilder: (BuildContext context, int index) {
-                YakadirCardData card = yakadirCards[index];
-                return YakadirCard(card: card);
-              }),
+          child: BlocBuilder<CardsBloc, CardsState>(
+            builder: (BuildContext context, CardsState state) {
+              return AppinioSwiper(
+                  cardsCount: yakadirCards.length,
+                  cardsBuilder: (BuildContext context, int index) {
+                    YakadirCardData card = yakadirCards[index];
+                    return YakadirCard(card: card);
+                  });
+            },
+          ),
         )),
         bottomNavigationBar: const CustomNavBar(),
       ),

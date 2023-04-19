@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_yakadir/blocs/Answering/answering.dart';
+import 'package:test_yakadir/blocs/Answering/answering_states.dart';
 import 'package:test_yakadir/custom-fonts/yakadir_icons_icons.dart';
+import 'package:test_yakadir/models/answering_mode.dart';
 import 'package:test_yakadir/models/yakadire_card.dart';
 import 'package:test_yakadir/pages/home/components/label_container.dart';
 import 'package:test_yakadir/speaking.dart';
 import 'package:test_yakadir/theme/themes.dart';
+import 'package:test_yakadir/writting.dart';
 
 class YakadirCard extends StatelessWidget {
   const YakadirCard({
@@ -72,26 +77,53 @@ class YakadirCard extends StatelessWidget {
             Expanded(
               child: Align(
                 alignment: Alignment.center,
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  margin: const EdgeInsets.all(20.0),
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xffe4efe3), width: 13),
-                    color: context.theme.primaryColor,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.mic,
-                      color: Colors.white,
-                      size: 40,
-                    ),
-                    onPressed: () =>
-                        {Navigator.pushNamed(context, SpeakingPage.routeName)},
-                  ),
-                ),
+                child: BlocBuilder<AnsweringBloc, AnsweringState>(
+                    builder: (BuildContext context, AnsweringState state) {
+                  if (state is ReadyToAnswerState) {
+                    if (state.mode == AnsweringMode.speaking) {
+                      return Container(
+                        width: 100,
+                        height: 100,
+                        margin: const EdgeInsets.all(20.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: const Color(0xffe4efe3), width: 13),
+                          color: context.theme.primaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.mic,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                          onPressed: () => {
+                            Navigator.pushNamed(context, SpeakingPage.routeName)
+                          },
+                        ),
+                      );
+                    } else {
+                      return ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                                context, WrittingPage.routeName);
+                          },
+                          child: Wrap(
+                            children: const [
+                              Text(
+                                'Je réponds',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              )
+                            ],
+                          ));
+                    }
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                }),
               ),
             )
           ]),

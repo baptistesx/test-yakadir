@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_yakadir/blocs/Answering/answering.dart';
+import 'package:test_yakadir/blocs/Answering/answering_events.dart';
 import 'package:test_yakadir/theme/themes.dart';
 
 class CustomAppBar extends StatefulWidget with PreferredSizeWidget {
@@ -16,7 +19,7 @@ class CustomAppBar extends StatefulWidget with PreferredSizeWidget {
 class _CustomAppBarState extends State<CustomAppBar> {
   final _swipperController = ValueNotifier<bool>(false);
 
-  bool _editting = false;
+  bool _writtingMode = false;
 
   @override
   void initState() {
@@ -25,9 +28,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
     _swipperController.addListener(() {
       setState(() {
         if (_swipperController.value) {
-          _editting = true;
+          _writtingMode = true;
+          context.read<AnsweringBloc>().add(SwitchToWrittingModeEvent());
         } else {
-          _editting = false;
+          _writtingMode = false;
+          context.read<AnsweringBloc>().add(SwitchToSpeakingModeEvent());
         }
       });
     });

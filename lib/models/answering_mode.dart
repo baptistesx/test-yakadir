@@ -1,0 +1,1 @@
+enum AnsweringMode { speaking, writting }
